@@ -170,6 +170,10 @@
 
 			<div>
 				<h1>FAQ</h1>
+				<h2>How do I use this?</h2>
+				<p>Under normal conditions, you should just simply just need to press the "Unapprove" button! Once confirmed, your transaction on the <a href="https://terraform.decentraland.org/" target="_blank">Terraform Registration webstie</a> should clear the pending or failed status and you should be able to stake again!</p>
+				<p>Your ERC20 address should automatically be loaded from MetaMask and your details should populate above. You should have a non-zero value for "Total Approved", if not, this tool may not fix your issue and you may need to contact an admin (@eordano on RocketChat), or through live support on the <a href="https://decentraland.org/" target="_blank">Decentraland website</a>.</p>
+
 				<h2>Why do we need to do this?</h2>
 				<p>When you send MANA to the Terraform staking event, there are 2 transactions involved. First, you approve the Terraform contract to transfer the MANA tokens from your wallet. Than the Terraform transfers the tokens. In order to approve an amount for the Terraform contract to transfer, it must first be approved for "0" - this is to overcome technical difficulties and prevent double spending on race conditions. This tool simply sets that value to 0 so you can stake more MANA. You will need to use this tool or process in between additional stakes (if you stake 1000 MANA now and want to stake another 1000 later, you will need to run this transaction before the next attempt.)</p>
 
