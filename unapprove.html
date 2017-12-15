@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<meta name="description" content="Personal homepage of Dan Kelly (dafky2000)">
+		<meta name="author" content="Daniel Kelly">
+		<link rel="shortcut icon" type="image/png" href="/img/me.png"/>
+
+		<title>Unapprove</title>
+
+		<!-- Bootstrap CSS (before any other stylesheets) -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/examples/narrow-jumbotron/narrow-jumbotron.css">
+
+		<!-- Font-awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<script type="text/javascript" src="https://cdn.rawgit.com/MikeMcl/bignumber.js/master/bignumber.min.js"></script>
+
+		<script type="text/javascript">
+			let CURRENT_DCL_ADDRESS = null;
+			let DCL_SPENDER_ABI = [{"constant":false,"inputs":[{"name":"target","type":"address"}],"name":"setTargetContract","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalLocked","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_acceptingDeposits","type":"bool"}],"name":"changeContractState","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"mana","type":"uint256"}],"name":"lockMana","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"manaToken","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"landClaim","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"lockedBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"acceptingDeposits","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"_token","type":"address"}],"payable":false,"type":"constructor"},{"payable":true,"type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"user","type":"address"},{"indexed":false,"name":"mana","type":"uint256"}],"name":"LockedBalance","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"target","type":"address"}],"name":"LandClaimContractSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"user","type":"address"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":false,"name":"data","type":"bytes"}],"name":"LandClaimExecuted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_acceptingDeposits","type":"bool"}],"name":"AcceptingDepositsChanged","type":"event"}];
+
+			function startApp() {
+				DCL_ADDRESS = web3.eth.accounts[0];
+				ethAddressChanged(DCL_ADDRESS);
+
+				var accountInterval = setInterval(function() {
+					if (web3.eth.accounts[0] !== DCL_ADDRESS) {
+						DCL_ADDRESS = web3.eth.accounts[0];
+						ethAddressChanged(DCL_ADDRESS);
+					}
+				}, 300);
+			}
+
+			function ethAddressChanged(account) {
+				document.querySelector('#EthAddress').innerText = account || '...';
+
+				// If we have a set account show all the stuff that appears with a set account
+				if(account)	Array.prototype.slice.call(document.querySelectorAll('.have_address')).map(function(item) { item.style.display = 'initial'; });
+
+				let contract_address = document.querySelector('#Contract_Address').value;
+				let contract_abi = JSON.parse(document.querySelector('#Contract_ABI').value);
+				let spender_address = document.querySelector('#Spender_Address').value;
+				let dcl_contract = web3.eth.contract(contract_abi).at(contract_address);
+
+				let dcl_spender_contract = null;
+				if(spender_address.toLowerCase() === '0xCCA95E580BbbD04851EBFB85F77FD46C9b91f11C'.toLowerCase())
+					dcl_spender_contract = web3.eth.contract(DCL_SPENDER_ABI).at(spender_address);
+
+				dcl_contract.decimals(function(error, decimals) {
+					// Current balance
+					dcl_contract.balanceOf(account, function(err, balance) {
+						document.querySelector('#Balance_Total').innerText = balance.div(new BigNumber(10).pow(decimals)).toString(10);
+					});
+
+					// Check if this address has an allowance.
+					dcl_contract.allowance(account, spender_address, function(err, balance) {
+						document.querySelector('#Balance_Approved').innerText = balance.div(new BigNumber(10).pow(decimals)).toString(10);
+					});
+
+					// Currently locked/staked
+					if(dcl_spender_contract !== null) {
+						document.querySelector('#Staked_MANA_ROW').style.display = 'table-row';
+
+						dcl_spender_contract.lockedBalance(account, function(err, balance) {
+							document.querySelector('#Staked_MANA').innerText = balance.div(new BigNumber(10).pow(decimals)).toString(10);
+						});
+					}
+				});
+			}
+
+			function unapprove(event) {
+				let contract_address = document.querySelector('#Contract_Address').value;
+				let contract_abi = JSON.parse(document.querySelector('#Contract_ABI').value);
+				let spender_address = document.querySelector('#Spender_Address').value;
+
+				// Check if this address has an allowance.
+				let dcl_contract = web3.eth.contract(contract_abi).at(contract_address);
+				dcl_contract.approve(spender_address, 0, function(err, res) { console.log(err, res); });
+			}
+		</script>
+
+		<style>
+			body {
+				padding-top: 5rem;
+			}
+			.starter-template {
+				padding: 3rem 1.5rem;
+				text-align: center;
+			}
+			.have_address {
+				display: none;
+			}
+		</style>
+
+	</head>
+	<body style="padding-top:4.5em;">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+			<a class="navbar-brand" href="/unapprove.html">Unapprove</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/#">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/#aboutme">About</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/#contactme">Contact</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="https://interapped.com" target="_blank"><img src="/img/interapped.png" height="24" /> InterApp'ed&trade;</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<main role="main" class="container">
+			<div class="starter-template">
+				<h1>"Unstuck" your approved transactions</h1>
+				<p class="lead">Tool to reset approved balances on ERC20 tokens.</p>
+
+				<p>Will attempt to unapprove allowances from <span id="EthAddress">...</span></p>
+			</div>
+
+			<div class="form-group have_address">
+				<table class="table">
+					<tbody>
+						<tr>
+							<th>Token Contract Address</th>
+							<td><input id="Contract_Address" class="form-control disabled" type="text" value="0x0F5D2fB29fb7d3CFeE444a200298f468908cC942" /></td>
+						</tr>
+						<tr>
+							<th>Token Contract ABI</th>
+							<td><textarea id="Contract_ABI" class="form-control">[{"constant":true,"inputs":[],"name":"mintingFinished","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"unpause","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"paused","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"finishMinting","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"pause","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"amount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[],"name":"MintFinished","type":"event"},{"anonymous":false,"inputs":[],"name":"Pause","type":"event"},{"anonymous":false,"inputs":[],"name":"Unpause","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"burner","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]</textarea></td>
+						</tr>
+						<tr>
+							<th>Spender Address</th>
+							<td><input id="Spender_Address" class="form-control" type="text" value="0xCCA95E580BbbD04851EBFB85F77FD46C9b91f11C" /></td>
+						</tr>
+						<tr>
+							<th>Token Balance</th>
+							<td id="Balance_Total"></td>
+						</tr>
+						<tr>
+							<th>Total Approved <span class="small">(not staked)</span></th>
+							<td id="Balance_Approved"></td>
+						</tr>
+						<tr id="Staked_MANA_ROW" style="display:none;">
+							<th>Mana Staked <span class="small">(not inc. bonus)</span></th>
+							<td id="Staked_MANA"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<button class="btn btn-primary float-right" onclick="unapprove(event)">Unapprove</button>
+				<div class="clear-float"></div>
+			</div>
+
+			<div>
+				<h1>FAQ</h1>
+				<h2>Why do we need to do this?</h2>
+				<p>When you send MANA to the Terraform staking event, there are 2 transactions involved. First, you approve the Terraform contract to transfer the MANA tokens from your wallet. Than the Terraform transfers the tokens. In order to approve an amount for the Terraform contract to transfer, it must first be approved for "0" - this is to overcome technical difficulties and prevent double spending on race conditions. This tool simply sets that value to 0 so you can stake more MANA. You will need to use this tool or process in between additional stakes (if you stake 1000 MANA now and want to stake another 1000 later, you will need to run this transaction before the next attempt.)</p>
+
+				<h2>This is sketchy... Why should I use this?</h2>
+				<p>Simply, you shouldn't. This is not ideal and using non-official tools are a risk and highly recommended against in ALL cases. You should never use tools you don't understand or come from non-authoritive source. Having said that, I can't stop people from making these mistakes - I can however help minimize the risk by providing a genuine tool. Use it or not, makes no difference to me!</p>
+			</div>
+		</main><!-- /.container -->
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<!-- End of body -->
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+		<script type="text/javascript">
+			(function detectWeb3OrFallback(callback, options) {
+				// MetaMask sometimes defines it immediately, before page load
+				// Adding a check here shaves some ms on the UX
+				if (typeof web3 !== 'undefined') {
+					callback();
+				} else {
+					window.addEventListener('load', checkForInjectedWeb3)
+				}
+
+				// Check
+				function checkForInjectedWeb3() {
+					// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+					if (typeof web3 !== 'undefined') {
+						callback();
+					} else {
+						var loading = _loadScript(options.fallbackWeb3Url);
+						loading.addEventListener('load', useFallbackWeb3);
+					}
+				}
+
+				function useFallbackWeb3() {
+					// fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+					window.web3 = new Web3(new Web3.providers.HttpProvider(options.fallbackProviderUrl));
+					options.onFallback();
+				}
+			})(function() {
+				// We found an injected web3, lets load the application script
+				// _loadScript('/index.js')
+				startApp();
+			}, {
+				fallbackProviderUrl: "MY_HOSTED_WEB3_NODE_PLZ_DONT_DDOS_IT_IF_YOU_SEE_IT",
+				fallbackWeb3Url: 'https://cdn.rawgit.com/ethereum/web3.js/64c932cf/dist/web3.min.js',
+				onFallback: function() {
+					// This is what I do personally
+					// Take the user to a page allowing them to
+					// Download metamask, or say "fuckit" and continue
+					// with a fallback web3
+					// My app is an SPA, so react eventually parses the history when it loads
+
+					// window.history.pushState({}, null, '/no-web3')
+					// window.usingFallbackWeb3 = true;
+					// _loadScript('/index.js');
+				}
+			})
+
+			function _loadScript(src) {
+				var appScript = document.createElement("script");
+				appScript.async = true;
+				appScript.src = src;
+				document.body.appendChild(appScript);
+				return appScript
+			}
+		</script>
+	</body>
+</html>
