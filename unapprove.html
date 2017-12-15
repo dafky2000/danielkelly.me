@@ -42,6 +42,10 @@
 
 				// If we have a set account show all the stuff that appears with a set account
 				if(account)	Array.prototype.slice.call(document.querySelectorAll('.have_address')).map(function(item) { item.style.display = 'initial'; });
+				else Array.prototype.slice.call(document.querySelectorAll('.have_address')).map(function(item) { item.style.display = 'none'; });
+
+				if(account)	Array.prototype.slice.call(document.querySelectorAll('.no_address')).map(function(item) { item.style.display = 'none'; });
+				else Array.prototype.slice.call(document.querySelectorAll('.no_address')).map(function(item) { item.style.display = 'initial'; });
 
 				let contract_address = document.querySelector('#Contract_Address').value;
 				let contract_abi = JSON.parse(document.querySelector('#Contract_ABI').value);
@@ -93,6 +97,9 @@
 				padding: 3rem 1.5rem;
 				text-align: center;
 			}
+			.no_address {
+				margin-bottom: 1em;
+			}
 			.have_address {
 				display: none;
 			}
@@ -131,10 +138,15 @@
 				<h1>"Unstuck" your approved transactions</h1>
 				<p class="lead">Tool to reset approved balances on ERC20 tokens.</p>
 
-				<p>Will attempt to unapprove allowances from <span id="EthAddress">...</span></p>
+				<p>Donations welcomed and appreciated, not required! Mana, Ethereum, any ERC20 tokens</p>
+				<p><strong>0x600EC13933A0956857e54de1Fb2A8ee4c9e32031</strong></p>
 			</div>
 
+			<div class="no_address alert alert-warning" role="alert">Currently trying to get your address from MetaMask...</div>
+
 			<div class="form-group have_address">
+				<div class="alert alert-success" role="alert">Will attempt to unapprove allowances from <span id="EthAddress">...</span></div>
+
 				<table class="table">
 					<tbody>
 						<tr>
