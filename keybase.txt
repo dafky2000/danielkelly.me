@@ -1,0 +1,69 @@
+==================================================================
+https://keybase.io/dafky2000
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://danielkelly.me
+  * I am dafky2000 (https://keybase.io/dafky2000) on keybase.
+  * I have a public key with fingerprint BBCE 48AA 5404 6880 E533  A7F7 69D4 F541 0DB9 230F
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "010135fc0df99a9e9bfcef0a0e1312c9a328f96954ba9c7b7a8a6b3ad5b6270d8d430a",
+      "fingerprint": "bbce48aa54046880e533a7f769d4f5410db9230f",
+      "host": "keybase.io",
+      "key_id": "69d4f5410db9230f",
+      "kid": "010135fc0df99a9e9bfcef0a0e1312c9a328f96954ba9c7b7a8a6b3ad5b6270d8d430a",
+      "uid": "15480bcbdaa3c6eeb8ff24ca53857d19",
+      "username": "dafky2000"
+    },
+    "service": {
+      "hostname": "danielkelly.me",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1547484818,
+  "expire_in": 157680000,
+  "prev": "f2ae258da813c56f4df22ca5b9bc4b9a251f3ca3157377d4b74d7505b96417f8",
+  "seqno": 10,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.80
+Comment: https://keybase.io/crypto
+
+yMInAnicrZJZbA1RGMdvlaJIrJUgwtgeVHNm5sx2LRGpVoKUpiKRynXWdvR25vbO
+tFzXkvDCAy2VqO2BWFKi1cT+QLXaSloeCGIraUOFBy+0qf1MgyePnk7O9/3/v/P/
+vpw7o1JD6Sl1W3bevqA+2ZPSfvtoeahwwc0DSQm7NCGFk1IJGzhYlDLPj5TYVApL
+QAayqnECKLcsZDELc8I4QIDJqqwQC6mKyS3d0iBGFjGwgUykYxVRDeuKAahJoQqQ
+lClx2yli8VjcdnyBxZgwaCKkQQB10wRMU1VkcEO3KOQalAHFlqICLozFrhc4RDiM
+PJZlu6ImLpGBeP/Q/+fc5QM4WYMmwARThFSiM4ZNzhVIkKaamkFlKxB6LO6gUibU
+FPGShAIAkLZlSqJcYRMWbDYY5a/EsVm0hEWjiSxRyJRicdd3iRsVvWLfj3nhwOsn
+YoF4E8OR35gIth0qVikcFSzu2a4jhWWhJL4dcEVOA5rQlM1MiW2O2XEWsQOFZuim
+yAOCd1iFQHIFMUUzKTJllWg6h5QripgHW5hAbCFFk7lKkCqcqmFQiA1IDQ2Ivg5l
+g5tSMFiZ4wq2gPqoSDA9u8hBfnmcSduaGgsHh1LSQ2lDBgV/LJQ+fPSfn2eNGxY6
+Fe6u+9hYteNlU+/2I/OPkqb80ubxG+YurD/TWJX9qHaMN/Z6IuPq6fcnnqZ6ZFrl
+zIaVQ4yCU1DPHrm+zjjLf1Szp/Gy2sZQzbdJfTUdP59Hrsy6Ryq78tuX3vrSX+dO
+qPiSPfLK9L3hazlE3uBcyl81or/5+Jzdh56c29jdWlXT+/lB2tT0797Fh9VpnTNW
+PzzWsCeRc3/X2Op3ua0x1uPn5i2rPZitFj/um3Tj40J2Y633prPt2cT6da+q3zpr
+kvvql+SdX5Gx9dP9w4va5pHZOPL5WO6L47HFOR+m5TvnOlq68nruTnmdWkBiyy8f
+uuxUJr/ijv3J6ycnt0SWzOtsH9r6C0DBSvg=
+=14k+
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/dafky2000
+
+==================================================================
+
